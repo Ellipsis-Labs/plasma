@@ -70,12 +70,6 @@ pub(crate) fn process_initialize_pool<'a, 'info>(
     )?;
 
     assert_with_msg(
-        protocol_fee_allocation_in_pct < 50,
-        ProgramError::InvalidArgument,
-        "The protocol fee allocation is capped at 50% of the LP fee",
-    )?;
-
-    assert_with_msg(
         fee_recipients_params
             .iter()
             .map(|params| params.shares as u128)
