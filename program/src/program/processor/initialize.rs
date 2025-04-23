@@ -3,7 +3,7 @@ use bytemuck::try_from_bytes_mut;
 use plasma_state::amm::Amm;
 use solana_program::{
     account_info::AccountInfo, clock::Clock, msg, program::invoke, program_error::ProgramError,
-    program_pack::Pack, pubkey::Pubkey, rent::Rent, sysvar::Sysvar,
+    program_pack::Pack, pubkey::Pubkey, rent::Rent, system_program, sysvar::Sysvar,
 };
 
 use crate::{
@@ -144,13 +144,22 @@ pub(crate) fn process_initialize_pool<'a, 'info>(
             collected_quote_fees: 0,
         });
 
-        assert_with_msg(
-            fee_recipients[0].recipient != fee_recipients[1].recipient
-                && fee_recipients[0].recipient != fee_recipients[2].recipient
-                && fee_recipients[1].recipient != fee_recipients[2].recipient,
-            ProgramError::InvalidArgument,
-            "Protocol fee recipients must be different",
-        )?;
+        let mut fee_recipient_keys = vec![];
+        for recipient in fee_recipients.iter() {
+            if recipient.recipient != system_program::ID {
+                if fee_recipient_keys.contains(&recipient.recipient) {
+                    msg!("Duplicate protocol fee recipient: {}", recipient.recipient);
+                    return Err(ProgramError::InvalidArgument);
+                }
+                fee_recipient_keys.push(recipient.recipient);
+            } else {
+                assert_with_msg(
+                    recipient.shares == 0,
+                    ProgramError::InvalidArgument,
+                    "Invalid protocol fee recipient configuration. Null recipient cannot have shares",
+                )?;
+            }
+        }
 
         ProtocolFeeRecipients::new(fee_recipients)
     };
