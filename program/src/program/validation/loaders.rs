@@ -355,7 +355,6 @@ impl<'a, 'info> WithdrawProtocolFeesContext<'a, 'info> {
         )?;
         let token_program = Program::new(next_account_info(account_iter)?, &spl_token::id())?;
 
-        // Assert that signer is one of the protocol fee recipients
         Ok(Self {
             quote_account,
             quote_vault,

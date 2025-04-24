@@ -69,6 +69,13 @@ pub struct RenounceLiquidityEvent {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TransferLiquidityEvent {
+    pub src: Pubkey,
+    pub dst: Pubkey,
+    pub lp_shares_transferred: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InitializeLpPositionEvent {
     pub owner: Pubkey,
 }

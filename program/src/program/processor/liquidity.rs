@@ -20,7 +20,7 @@ use crate::{
         },
         events::{
             AddLiquidityEvent, InitializeLpPositionEvent, RemoveLiquidityEvent,
-            RenounceLiquidityEvent,
+            RenounceLiquidityEvent, TransferLiquidityEvent,
         },
         system_utils::create_account,
         token_utils::{try_deposit, try_withdraw, TryDepositParams, TryWithdrawParams},
@@ -340,5 +340,74 @@ pub(crate) fn process_renounce_liqidity<'a, 'info>(
 
     Ok(RenounceLiquidityEvent {
         allow_fee_withdrawal,
+    })
+}
+
+pub(crate) fn process_transfer_liquidity<'a, 'info>(
+    pool_context: &PlasmaPoolContext<'a, 'info>,
+    accounts: &[AccountInfo<'info>],
+) -> Result<TransferLiquidityEvent, ProgramError> {
+    let account_iter = &mut accounts.iter();
+    let src_lp_position_account = LpPositionAccountInfo::new(
+        next_account_info(account_iter)?,
+        pool_context.pool_info.key,
+        pool_context.signer.key,
+    )?;
+
+    let dst_lp_position_account = LpPositionAccountInfo::new_from_pool(
+        next_account_info(account_iter)?,
+        pool_context.pool_info.key,
+    )?;
+
+    assert_with_msg(
+        src_lp_position_account.info.key != dst_lp_position_account.info.key,
+        ProgramError::InvalidArgument,
+        "Source and destination liquidity positions must be different",
+    )?;
+
+    let mut src_lp_position_bytes = src_lp_position_account.info.try_borrow_mut_data()?;
+    let src_lp_position = try_from_bytes_mut::<LpPositionAccount>(&mut *src_lp_position_bytes)
+        .map_err(|_| ProgramError::InvalidAccountData)?;
+
+    if matches!(
+        LpPositionStatus::parse(src_lp_position.status)?,
+        LpPositionStatus::RenouncedWithBurnedFees | LpPositionStatus::RenouncedWithFeeWithdawal
+    ) {
+        msg!("Source liquidity position has been renounced, cannot transfer");
+        return Err(ProgramError::InvalidArgument);
+    }
+
+    let mut dst_lp_position_bytes = dst_lp_position_account.info.try_borrow_mut_data()?;
+    let dst_lp_position = try_from_bytes_mut::<LpPositionAccount>(&mut *dst_lp_position_bytes)
+        .map_err(|_| ProgramError::InvalidAccountData)?;
+
+    if matches!(
+        LpPositionStatus::parse(dst_lp_position.status)?,
+        LpPositionStatus::RenouncedWithBurnedFees | LpPositionStatus::RenouncedWithFeeWithdawal
+    ) {
+        msg!("Destination liquidity position has been renounced, cannot transfer");
+        return Err(ProgramError::InvalidArgument);
+    }
+
+    // Get the active leader slot
+    let slot = (Clock::get()?.slot / LEADER_SLOT_WINDOW) * LEADER_SLOT_WINDOW;
+
+    let pool_bytes = pool_context.pool_info.try_borrow_data()?;
+    let pool = try_from_bytes::<PoolAccount>(&pool_bytes).map_err(|_| {
+        msg!("Failed to deserialize pool account");
+        ProgramError::InvalidAccountData
+    })?;
+
+    let lp_shares_transferred = src_lp_position
+        .transfer_liquidity(slot, pool, dst_lp_position)
+        .map_err(|e| {
+            msg!("Error transferring liquidity: {:?}", e);
+            ProgramError::InvalidArgument
+        })?;
+
+    Ok(TransferLiquidityEvent {
+        src: src_lp_position.authority,
+        dst: dst_lp_position.authority,
+        lp_shares_transferred,
     })
 }

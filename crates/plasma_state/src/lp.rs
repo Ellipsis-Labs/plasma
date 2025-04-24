@@ -19,6 +19,10 @@ impl PendingSharesToVest {
         }
     }
 
+    pub fn is_vesting(&self) -> bool {
+        self.lp_shares_to_vest > 0 || self.deposit_slot != 0
+    }
+
     pub fn set(&mut self, slot: SlotWindow, lp_shares: u64) -> Result<(), PlasmaStateError> {
         if self.deposit_slot == 0 {
             self.deposit_slot = slot;
@@ -41,6 +45,13 @@ impl PendingSharesToVest {
         } else {
             0
         }
+    }
+
+    /// Force vest the shares, this is only used when transferring liquidity
+    pub(crate) fn force_vest_shares(&mut self) -> u64 {
+        let lp_shares = self.lp_shares_to_vest;
+        self.deposit_slot = 0;
+        lp_shares
     }
 }
 
@@ -160,6 +171,47 @@ impl LpPosition {
             lp_shares_vested,
             quote_fees_accumulated,
         })
+    }
+
+    pub fn transfer_liquidity(
+        &mut self,
+        slot: SlotWindow,
+        amm: &Amm,
+        dst: &mut LpPosition,
+    ) -> Result<u64, PlasmaStateError> {
+        self.preprocess_lp_position(slot, amm)?;
+
+        // You cannot transfer liquidity if the destination is vesting
+        if dst.pending_shares_to_vest.is_vesting() {
+            return Err(PlasmaStateError::VestingPeriodNotOver);
+        }
+
+        // Force vest the shares to make sure the full amount is transferred to the destination
+        let total_withdrawable_lp_shares =
+            self.withdrawable_lp_shares + self.pending_shares_to_vest.lp_shares_to_vest;
+
+        if total_withdrawable_lp_shares != self.lp_shares {
+            return Err(PlasmaStateError::InvariantViolation(
+                total_withdrawable_lp_shares as u128,
+                self.lp_shares as u128,
+            ));
+        }
+
+        // Every state mutation after this point is not allowed to fail
+        self.pending_shares_to_vest.force_vest_shares();
+
+        let lp_shares_transferred = self.lp_shares;
+
+        // Zero out the source liquidity position
+        self.withdrawable_lp_shares = 0;
+        self.lp_shares = 0;
+
+        // Increment the destination liquidity position
+        dst.pending_shares_to_vest
+            .set(slot, lp_shares_transferred)?;
+        dst.lp_shares += lp_shares_transferred;
+
+        Ok(lp_shares_transferred)
     }
 
     pub fn collect_fees(&mut self, slot: SlotWindow, amm: &Amm) -> Result<u64, PlasmaStateError> {

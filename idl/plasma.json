@@ -631,6 +631,55 @@
         "type": "u8",
         "value": 8
       }
+    },
+    {
+      "name": "TransferLiquidity",
+      "accounts": [
+        {
+          "name": "plasmaProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Plasma program"
+          ]
+        },
+        {
+          "name": "logAuthority",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Plasma log authority"
+          ]
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "This account holds the pool state"
+          ]
+        },
+        {
+          "name": "trader",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "srcLpPosition",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "dstLpPosition",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [],
+      "discriminant": {
+        "type": "u8",
+        "value": 9
+      }
     }
   ],
   "types": [

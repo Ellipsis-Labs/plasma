@@ -99,6 +99,31 @@ pub(crate) struct LpPositionAccountInfo<'a, 'info> {
 }
 
 impl<'a, 'info> LpPositionAccountInfo<'a, 'info> {
+    pub(crate) fn new_from_pool(
+        info: &'a AccountInfo<'info>,
+        pool: &Pubkey,
+    ) -> Result<LpPositionAccountInfo<'a, 'info>, ProgramError> {
+        assert_with_msg(
+            info.owner == &crate::ID,
+            ProgramError::IllegalOwner,
+            "LP position account must be owned by the Plasma program",
+        )?;
+        let lp_position_bytes = info.try_borrow_data()?;
+        let lp_position = try_from_bytes::<LpPositionAccount>(&lp_position_bytes)
+            .map_err(|_| ProgramError::InvalidAccountData)?;
+        assert_with_msg(
+            lp_position.discriminator == LP_POSITION_ACCOUNT_DISCRIMINATOR,
+            ProgramError::InvalidAccountData,
+            "Invalid discriminant for seat",
+        )?;
+        assert_with_msg(
+            &lp_position.pool == pool,
+            ProgramError::InvalidAccountData,
+            "Invalid pool for LP position",
+        )?;
+        Ok(Self { info })
+    }
+
     pub(crate) fn new(
         info: &'a AccountInfo<'info>,
         pool: &Pubkey,

@@ -171,6 +171,12 @@ pub fn process_instruction(
                 record_event!(event, plasma_log_context, instruction, pool_context)
             })?
         }
+        PlasmaInstruction::TransferLiquidity => {
+            msg!("TransferLiquidity");
+            liquidity::process_transfer_liquidity(&pool_context, accounts).and_then(|event| {
+                record_event!(event, plasma_log_context, instruction, pool_context)
+            })?
+        }
         PlasmaInstruction::Log => {
             // The log instruction is handled at the beginning of this function
             unreachable!()

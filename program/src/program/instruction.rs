@@ -98,6 +98,15 @@ pub enum PlasmaInstruction {
 
     #[account(0, signer, name = "log_authority", desc = "Log authority")]
     Log = 8,
+
+    /// Transfer liquidity between LP positions
+    #[account(0, name = "plasma_program", desc = "Plasma program")]
+    #[account(1, name = "log_authority", desc = "Plasma log authority")]
+    #[account(2, writable, name = "pool", desc = "This account holds the pool state")]
+    #[account(3, signer, name = "trader")]
+    #[account(4, writable, name = "src_lp_position")]
+    #[account(5, writable, name = "dst_lp_position")]
+    TransferLiquidity = 9,
 }
 
 impl PlasmaInstruction {
