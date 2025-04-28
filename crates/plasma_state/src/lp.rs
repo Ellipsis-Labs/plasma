@@ -192,7 +192,7 @@ impl LpPosition {
         // You cannot transfer liquidity if the destination is not empty
         if !dst.is_empty() {
             return Err(PlasmaStateError::InvariantViolation(
-                dst.lp_shares as u128,
+                dst.lp_shares as u128 + dst.uncollected_fees as u128,
                 0,
             ));
         }
