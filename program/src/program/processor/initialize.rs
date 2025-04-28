@@ -70,6 +70,12 @@ pub(crate) fn process_initialize_pool<'a, 'info>(
     )?;
 
     assert_with_msg(
+        protocol_fee_allocation_in_pct <= 100,
+        ProgramError::InvalidArgument,
+        "The protocol fee allocation must be less than or equal to 100%",
+    )?;
+
+    assert_with_msg(
         fee_recipients_params
             .iter()
             .map(|params| params.shares as u128)
@@ -189,8 +195,8 @@ pub(crate) fn process_initialize_pool<'a, 'info>(
         lp_fee_in_bps as u32,
         protocol_fee_allocation_in_pct as u32,
         vesting_slot_window
-            .map(|v| v / LEADER_SLOT_WINDOW)
-            .unwrap_or(2),
+            .map(|v| (v / LEADER_SLOT_WINDOW) * LEADER_SLOT_WINDOW)
+            .unwrap_or(2 * LEADER_SLOT_WINDOW),
         slot,
     );
 

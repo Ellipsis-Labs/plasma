@@ -77,6 +77,13 @@ impl LpPosition {
             pending_shares_to_vest: PendingSharesToVest::new(),
         }
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.lp_shares == 0
+            && self.withdrawable_lp_shares == 0
+            && !self.pending_shares_to_vest.is_vesting()
+            && self.uncollected_fees == 0
+    }
 }
 
 impl LpPosition {
@@ -182,9 +189,12 @@ impl LpPosition {
         self.preprocess_lp_position(slot, amm)?;
         dst.preprocess_lp_position(slot, amm)?;
 
-        // You cannot transfer liquidity if the destination is vesting
-        if dst.pending_shares_to_vest.is_vesting() {
-            return Err(PlasmaStateError::VestingPeriodNotOver);
+        // You cannot transfer liquidity if the destination is not empty
+        if !dst.is_empty() {
+            return Err(PlasmaStateError::InvariantViolation(
+                dst.lp_shares as u128,
+                0,
+            ));
         }
 
         // Force vest the shares to make sure the full amount is transferred to the destination
