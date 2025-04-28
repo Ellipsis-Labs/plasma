@@ -180,6 +180,7 @@ impl LpPosition {
         dst: &mut LpPosition,
     ) -> Result<u64, PlasmaStateError> {
         self.preprocess_lp_position(slot, amm)?;
+        dst.preprocess_lp_position(slot, amm)?;
 
         // You cannot transfer liquidity if the destination is vesting
         if dst.pending_shares_to_vest.is_vesting() {
