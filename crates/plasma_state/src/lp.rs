@@ -80,9 +80,6 @@ impl LpPosition {
 
     pub fn is_empty(&self) -> bool {
         self.lp_shares == 0
-            && self.withdrawable_lp_shares == 0
-            && !self.pending_shares_to_vest.is_vesting()
-            && self.uncollected_fees == 0
     }
 }
 
@@ -192,7 +189,7 @@ impl LpPosition {
         // You cannot transfer liquidity if the destination is not empty
         if !dst.is_empty() {
             return Err(PlasmaStateError::InvariantViolation(
-                dst.lp_shares as u128 + dst.uncollected_fees as u128,
+                dst.lp_shares as u128,
                 0,
             ));
         }
