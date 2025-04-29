@@ -153,7 +153,7 @@ impl Amm {
     ///
     /// The size of the limit order is determined by the following constraint:
     ///
-    /// ```no_run
+    /// ```ignore
     /// (quote_snapshot / base_snapshot) = (quote_reserves + ∆_quote) / (base_reserves + ∆_base)
     /// ```
     ///
@@ -172,13 +172,13 @@ impl Amm {
     /// for buy and sell
     ///
     /// - Limit order on the buy side (bid)
-    /// ```no_run
+    /// ```ignore
     /// ∆_base = (base_snapshot * quote_reserves - quote_snapshot * base_reserves) / (2 * quote_snapshot)
     /// ∆_quote = (base_snapshot * quote_reserves - quote_snapshot * base_reserves) / (2 * base_snapshot)
     /// ```
     ///
     /// - Limit order on the sell side (ask)
-    /// ```no_run
+    /// ```ignore
     /// ∆_base = (quote_snapshot * base_reserves - base_snapshot * quote_reserves) / (2 * quote_snapshot)
     /// ∆_quote = (quote_snapshot * base_reserves - base_snapshot * quote_reserves) / (2 * base_snapshot)
     /// ```
@@ -441,7 +441,7 @@ impl Amm {
             });
         }
 
-        self.base_reserves -= base_amount_withdrawn.downcast()?;
+        self.base_reserves -= base_amount_withdrawn.downcast()?get_limit_order_size_in_base_and_quote;
         self.quote_reserves -= quote_amount_withdrawn.downcast()?;
         self.total_lp_shares -= lp_shares;
 
