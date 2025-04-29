@@ -50,6 +50,7 @@ impl PendingSharesToVest {
     /// Force vest the shares, this is only used when transferring liquidity
     pub(crate) fn force_vest_shares(&mut self) -> u64 {
         let lp_shares = self.lp_shares_to_vest;
+        self.lp_shares_to_vest = 0;
         self.deposit_slot = 0;
         lp_shares
     }
