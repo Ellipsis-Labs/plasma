@@ -153,7 +153,7 @@ impl Amm {
     ///
     /// The size of the limit order is determined by the following constraint:
     ///
-    /// ```no_run
+    /// ```ignore
     /// (quote_snapshot / base_snapshot) = (quote_reserves + ∆_quote) / (base_reserves + ∆_base)
     /// ```
     ///
@@ -178,7 +178,7 @@ impl Amm {
     /// ```
     ///
     /// - Limit order on the sell side (ask)
-    /// ```no_run
+    /// ```ignore
     /// ∆_base = (quote_snapshot * base_reserves - base_snapshot * quote_reserves) / (2 * quote_snapshot)
     /// ∆_quote = (quote_snapshot * base_reserves - base_snapshot * quote_reserves) / (2 * base_snapshot)
     /// ```
