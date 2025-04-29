@@ -435,7 +435,10 @@ impl Amm {
             self.quote_reserves.upcast() * lp_shares.upcast() / self.total_lp_shares.upcast();
 
         if base_amount_withdrawn == 0 || quote_amount_withdrawn == 0 {
-            return Err(PlasmaStateError::BelowMinimumWithdrawaRequired);
+            return Err(PlasmaStateError::BelowMinimumWithdrawaRequired {
+                base_amount_to_withdraw: base_amount_withdrawn.downcast()?,
+                quote_amount_to_withdraw: quote_amount_withdrawn.downcast()?,
+            });
         }
 
         self.base_reserves -= base_amount_withdrawn.downcast()?;

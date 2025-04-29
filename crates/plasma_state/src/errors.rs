@@ -11,7 +11,10 @@ pub enum PlasmaStateError {
     UnexpectedArgument,
     MissingExpectedArgument,
     BelowMinimumLpSharesRequired,
-    BelowMinimumWithdrawaRequired,
+    BelowMinimumWithdrawaRequired {
+        quote_amount_to_withdraw: u64,
+        base_amount_to_withdraw: u64,
+    },
     VestingPeriodNotOver,
     IncorrectProtocolFeeRecipient,
     TooManyShares,
@@ -46,9 +49,14 @@ impl Display for PlasmaStateError {
             PlasmaStateError::BelowMinimumLpSharesRequired => {
                 write!(f, "Must mint at least 1 LP share")
             }
-            PlasmaStateError::BelowMinimumWithdrawaRequired => {
-                write!(f, "Must withdraw at least 1 base token and 1 quote token")
-            }
+            PlasmaStateError::BelowMinimumWithdrawaRequired {
+                quote_amount_to_withdraw,
+                base_amount_to_withdraw,
+            } => write!(
+                f,
+                "Must withdraw at least 1 base token (actual: {} base) and 1 quote token (actual: {} quote)",
+                base_amount_to_withdraw, quote_amount_to_withdraw
+            ),
             PlasmaStateError::VestingPeriodNotOver => write!(f, "Previous vesting period not over"),
             PlasmaStateError::IncorrectProtocolFeeRecipient => {
                 write!(

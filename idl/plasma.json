@@ -9,25 +9,19 @@
           "name": "plasmaProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma program"
-          ]
+          "docs": ["Plasma program"]
         },
         {
           "name": "logAuthority",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma log authority"
-          ]
+          "docs": ["Plasma log authority"]
         },
         {
           "name": "pool",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "This account holds the pool state"
-          ]
+          "docs": ["This account holds the pool state"]
         },
         {
           "name": "trader",
@@ -38,17 +32,13 @@
           "name": "baseAccount",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "Trader base token account"
-          ]
+          "docs": ["Trader base token account"]
         },
         {
           "name": "quoteAccount",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "Trader quote token account"
-          ]
+          "docs": ["Trader quote token account"]
         },
         {
           "name": "baseVault",
@@ -70,9 +60,7 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Token program"
-          ]
+          "docs": ["Token program"]
         }
       ],
       "args": [
@@ -95,25 +83,19 @@
           "name": "plasmaProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma program"
-          ]
+          "docs": ["Plasma program"]
         },
         {
           "name": "logAuthority",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma log authority"
-          ]
+          "docs": ["Plasma log authority"]
         },
         {
           "name": "pool",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "This account holds the pool state"
-          ]
+          "docs": ["This account holds the pool state"]
         },
         {
           "name": "trader",
@@ -129,17 +111,13 @@
           "name": "baseAccount",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "Trader base token account"
-          ]
+          "docs": ["Trader base token account"]
         },
         {
           "name": "quoteAccount",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "Trader quote token account"
-          ]
+          "docs": ["Trader quote token account"]
         },
         {
           "name": "baseVault",
@@ -161,9 +139,7 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Token program"
-          ]
+          "docs": ["Token program"]
         }
       ],
       "args": [
@@ -186,25 +162,19 @@
           "name": "plasmaProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma program"
-          ]
+          "docs": ["Plasma program"]
         },
         {
           "name": "logAuthority",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma log authority"
-          ]
+          "docs": ["Plasma log authority"]
         },
         {
           "name": "pool",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "This account holds the pool state"
-          ]
+          "docs": ["This account holds the pool state"]
         },
         {
           "name": "trader",
@@ -220,17 +190,13 @@
           "name": "baseAccount",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "Trader base token account"
-          ]
+          "docs": ["Trader base token account"]
         },
         {
           "name": "quoteAccount",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "Trader quote token account"
-          ]
+          "docs": ["Trader quote token account"]
         },
         {
           "name": "baseVault",
@@ -252,9 +218,7 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Token program"
-          ]
+          "docs": ["Token program"]
         }
       ],
       "args": [
@@ -277,25 +241,19 @@
           "name": "plasmaProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma program"
-          ]
+          "docs": ["Plasma program"]
         },
         {
           "name": "logAuthority",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma log authority"
-          ]
+          "docs": ["Plasma log authority"]
         },
         {
           "name": "pool",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "This account holds the pool state"
-          ]
+          "docs": ["This account holds the pool state"]
         },
         {
           "name": "trader",
@@ -328,25 +286,19 @@
           "name": "plasmaProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma program"
-          ]
+          "docs": ["Plasma program"]
         },
         {
           "name": "logAuthority",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma log authority"
-          ]
+          "docs": ["Plasma log authority"]
         },
         {
           "name": "pool",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "This account holds the pool state"
-          ]
+          "docs": ["This account holds the pool state"]
         },
         {
           "name": "trader",
@@ -367,9 +319,7 @@
           "name": "quoteAccount",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "Trader quote token account"
-          ]
+          "docs": ["Trader quote token account"]
         },
         {
           "name": "quoteVault",
@@ -383,9 +333,7 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Token program"
-          ]
+          "docs": ["Token program"]
         }
       ],
       "args": [],
@@ -401,25 +349,19 @@
           "name": "plasmaProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma program"
-          ]
+          "docs": ["Plasma program"]
         },
         {
           "name": "logAuthority",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma log authority"
-          ]
+          "docs": ["Plasma log authority"]
         },
         {
           "name": "pool",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "This account holds the pool state"
-          ]
+          "docs": ["This account holds the pool state"]
         },
         {
           "name": "payer",
@@ -440,9 +382,7 @@
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "System program"
-          ]
+          "docs": ["System program"]
         }
       ],
       "args": [],
@@ -458,25 +398,19 @@
           "name": "plasmaProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma program"
-          ]
+          "docs": ["Plasma program"]
         },
         {
           "name": "logAuthority",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma log authority"
-          ]
+          "docs": ["Plasma log authority"]
         },
         {
           "name": "pool",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "This account holds the pool state"
-          ]
+          "docs": ["This account holds the pool state"]
         },
         {
           "name": "poolCreator",
@@ -490,17 +424,13 @@
           "name": "baseMint",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Base mint account"
-          ]
+          "docs": ["Base mint account"]
         },
         {
           "name": "quoteMint",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Quote mint account"
-          ]
+          "docs": ["Quote mint account"]
         },
         {
           "name": "baseVault",
@@ -522,17 +452,13 @@
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "System program"
-          ]
+          "docs": ["System program"]
         },
         {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Token program"
-          ]
+          "docs": ["Token program"]
         }
       ],
       "args": [
@@ -555,41 +481,31 @@
           "name": "plasmaProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma program"
-          ]
+          "docs": ["Plasma program"]
         },
         {
           "name": "logAuthority",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma log authority"
-          ]
+          "docs": ["Plasma log authority"]
         },
         {
           "name": "pool",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "This account holds the pool state"
-          ]
+          "docs": ["This account holds the pool state"]
         },
         {
           "name": "protocolFeeRecipient",
           "isMut": false,
           "isSigner": true,
-          "docs": [
-            "Recipient of protocol fees"
-          ]
+          "docs": ["Recipient of protocol fees"]
         },
         {
           "name": "quoteAccount",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "Trader quote token account"
-          ]
+          "docs": ["Trader quote token account"]
         },
         {
           "name": "quoteVault",
@@ -603,9 +519,7 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Token program"
-          ]
+          "docs": ["Token program"]
         }
       ],
       "args": [],
@@ -621,9 +535,7 @@
           "name": "logAuthority",
           "isMut": false,
           "isSigner": true,
-          "docs": [
-            "Log authority"
-          ]
+          "docs": ["Log authority"]
         }
       ],
       "args": [],
@@ -639,25 +551,19 @@
           "name": "plasmaProgram",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma program"
-          ]
+          "docs": ["Plasma program"]
         },
         {
           "name": "logAuthority",
           "isMut": false,
           "isSigner": false,
-          "docs": [
-            "Plasma log authority"
-          ]
+          "docs": ["Plasma log authority"]
         },
         {
           "name": "pool",
           "isMut": true,
           "isSigner": false,
-          "docs": [
-            "This account holds the pool state"
-          ]
+          "docs": ["This account holds the pool state"]
         },
         {
           "name": "trader",
@@ -792,10 +698,7 @@
           {
             "name": "padding",
             "type": {
-              "array": [
-                "u64",
-                12
-              ]
+              "array": ["u64", 12]
             }
           }
         ]
@@ -831,10 +734,7 @@
           {
             "name": "padding",
             "type": {
-              "array": [
-                "u64",
-                13
-              ]
+              "array": ["u64", 13]
             }
           }
         ]
@@ -1529,7 +1429,7 @@
   ],
   "metadata": {
     "origin": "shank",
-    "address": "3G7dwtMPJZZ78kssvMLixsjqswSEMhm4wR3urbL2dhC1"
+    "address": "srAMMzfVHVAtgSJc8iH6CfKzuWuUTzLHVCE81QU1rgi"
   },
   "accounts": [
     {
