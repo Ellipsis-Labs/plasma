@@ -162,7 +162,7 @@ pub(crate) fn process_add_liquidity<'a, 'info>(
         LpPositionStatus::parse(lp_position.status)?,
         LpPositionStatus::RenouncedWithBurnedFees | LpPositionStatus::RenouncedWithFeeWithdawal
     ) {
-        msg!("Liquidity position has been renounced, cannot remove liquidity");
+        msg!("Liquidity position has been renounced, cannot add liquidity");
         return Err(ProgramError::InvalidArgument);
     }
 
