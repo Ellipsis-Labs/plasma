@@ -4,6 +4,7 @@ import * as types from "../types" // eslint-disable-line @typescript-eslint/no-u
 import * as borsh from "@coral-xyz/borsh"
 
 export interface SwapEventFields {
+  swapSequenceNumber: BN
   preBaseLiquidity: BN
   preQuoteLiquidity: BN
   postBaseLiquidity: BN
@@ -14,6 +15,7 @@ export interface SwapEventFields {
 }
 
 export interface SwapEventJSON {
+  swapSequenceNumber: string
   preBaseLiquidity: string
   preQuoteLiquidity: string
   postBaseLiquidity: string
@@ -24,6 +26,7 @@ export interface SwapEventJSON {
 }
 
 export class SwapEvent {
+  readonly swapSequenceNumber: BN
   readonly preBaseLiquidity: BN
   readonly preQuoteLiquidity: BN
   readonly postBaseLiquidity: BN
@@ -33,6 +36,7 @@ export class SwapEvent {
   readonly swapResult: types.SwapResult
 
   constructor(fields: SwapEventFields) {
+    this.swapSequenceNumber = fields.swapSequenceNumber
     this.preBaseLiquidity = fields.preBaseLiquidity
     this.preQuoteLiquidity = fields.preQuoteLiquidity
     this.postBaseLiquidity = fields.postBaseLiquidity
@@ -45,6 +49,7 @@ export class SwapEvent {
   static layout(property?: string) {
     return borsh.struct(
       [
+        borsh.u64("swapSequenceNumber"),
         borsh.u64("preBaseLiquidity"),
         borsh.u64("preQuoteLiquidity"),
         borsh.u64("postBaseLiquidity"),
@@ -60,6 +65,7 @@ export class SwapEvent {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static fromDecoded(obj: any) {
     return new SwapEvent({
+      swapSequenceNumber: obj.swapSequenceNumber,
       preBaseLiquidity: obj.preBaseLiquidity,
       preQuoteLiquidity: obj.preQuoteLiquidity,
       postBaseLiquidity: obj.postBaseLiquidity,
@@ -72,6 +78,7 @@ export class SwapEvent {
 
   static toEncodable(fields: SwapEventFields) {
     return {
+      swapSequenceNumber: fields.swapSequenceNumber,
       preBaseLiquidity: fields.preBaseLiquidity,
       preQuoteLiquidity: fields.preQuoteLiquidity,
       postBaseLiquidity: fields.postBaseLiquidity,
@@ -84,6 +91,7 @@ export class SwapEvent {
 
   toJSON(): SwapEventJSON {
     return {
+      swapSequenceNumber: this.swapSequenceNumber.toString(),
       preBaseLiquidity: this.preBaseLiquidity.toString(),
       preQuoteLiquidity: this.preQuoteLiquidity.toString(),
       postBaseLiquidity: this.postBaseLiquidity.toString(),
@@ -96,6 +104,7 @@ export class SwapEvent {
 
   static fromJSON(obj: SwapEventJSON): SwapEvent {
     return new SwapEvent({
+      swapSequenceNumber: new BN(obj.swapSequenceNumber),
       preBaseLiquidity: new BN(obj.preBaseLiquidity),
       preQuoteLiquidity: new BN(obj.preQuoteLiquidity),
       postBaseLiquidity: new BN(obj.postBaseLiquidity),

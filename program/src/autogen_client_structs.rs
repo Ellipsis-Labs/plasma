@@ -54,7 +54,8 @@ pub struct PoolHeader {
     pub base_params: TokenParams,
     pub quote_params: TokenParams,
     pub fee_recipients: ProtocolFeeRecipients,
-    pub padding: [u64; 13],
+    pub swap_sequence_number: u64,
+    pub padding: [u64; 12],
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone, BorshDeserialize, BorshSerialize)]
@@ -93,7 +94,7 @@ pub struct PendingSharesToVest {
 
 /* Instruction params. Each struct below must be formatted as IX_NAME + "IxParams" */
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, BorshDeserialize, BorshSerialize)]
+#[derive(Clone, Copy, Debug, Default, BorshDeserialize, BorshSerialize)]
 pub struct InitializePoolIxParams {
     lp_fee_in_bps: u64,
     protocol_lp_fee_allocation_in_pct: u64,
@@ -168,6 +169,7 @@ pub struct PlasmaEventHeader {
 
 #[derive(Debug, Clone, BorshSerialize, BorshDeserialize)]
 pub struct SwapEvent {
+    pub swap_sequence_number: u64,
     pub pre_base_liquidity: u64,
     pub pre_quote_liquidity: u64,
     pub post_base_liquidity: u64,

@@ -238,6 +238,7 @@ pub(crate) fn process_swap<'a, 'info>(
     }
 
     Ok(Some(SwapEvent {
+        swap_sequence_number: pool.increment_swap_sequence_number(),
         pre_base_liquidity,
         pre_quote_liquidity,
         post_base_liquidity,

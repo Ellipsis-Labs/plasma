@@ -20,6 +20,7 @@ pub struct PlasmaEvent<T: Clone + Deserialize + Serialize> {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SwapEvent {
+    pub swap_sequence_number: u64,
     pub pre_base_liquidity: u64,
     pub pre_quote_liquidity: u64,
     pub post_base_liquidity: u64,

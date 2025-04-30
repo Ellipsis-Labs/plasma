@@ -8,6 +8,7 @@ export interface PoolHeaderFields {
   baseParams: types.TokenParamsFields
   quoteParams: types.TokenParamsFields
   feeRecipients: types.ProtocolFeeRecipientsFields
+  swapSequenceNumber: BN
   padding: Array<BN>
 }
 
@@ -16,6 +17,7 @@ export interface PoolHeaderJSON {
   baseParams: types.TokenParamsJSON
   quoteParams: types.TokenParamsJSON
   feeRecipients: types.ProtocolFeeRecipientsJSON
+  swapSequenceNumber: string
   padding: Array<string>
 }
 
@@ -24,6 +26,7 @@ export class PoolHeader {
   readonly baseParams: types.TokenParams
   readonly quoteParams: types.TokenParams
   readonly feeRecipients: types.ProtocolFeeRecipients
+  readonly swapSequenceNumber: BN
   readonly padding: Array<BN>
 
   constructor(fields: PoolHeaderFields) {
@@ -33,6 +36,7 @@ export class PoolHeader {
     this.feeRecipients = new types.ProtocolFeeRecipients({
       ...fields.feeRecipients,
     })
+    this.swapSequenceNumber = fields.swapSequenceNumber
     this.padding = fields.padding
   }
 
@@ -43,7 +47,8 @@ export class PoolHeader {
         types.TokenParams.layout("baseParams"),
         types.TokenParams.layout("quoteParams"),
         types.ProtocolFeeRecipients.layout("feeRecipients"),
-        borsh.array(borsh.u64(), 13, "padding"),
+        borsh.u64("swapSequenceNumber"),
+        borsh.array(borsh.u64(), 12, "padding"),
       ],
       property
     )
@@ -56,6 +61,7 @@ export class PoolHeader {
       baseParams: types.TokenParams.fromDecoded(obj.baseParams),
       quoteParams: types.TokenParams.fromDecoded(obj.quoteParams),
       feeRecipients: types.ProtocolFeeRecipients.fromDecoded(obj.feeRecipients),
+      swapSequenceNumber: obj.swapSequenceNumber,
       padding: obj.padding,
     })
   }
@@ -68,6 +74,7 @@ export class PoolHeader {
       feeRecipients: types.ProtocolFeeRecipients.toEncodable(
         fields.feeRecipients
       ),
+      swapSequenceNumber: fields.swapSequenceNumber,
       padding: fields.padding,
     }
   }
@@ -78,6 +85,7 @@ export class PoolHeader {
       baseParams: this.baseParams.toJSON(),
       quoteParams: this.quoteParams.toJSON(),
       feeRecipients: this.feeRecipients.toJSON(),
+      swapSequenceNumber: this.swapSequenceNumber.toString(),
       padding: this.padding.map((item) => item.toString()),
     }
   }
@@ -88,6 +96,7 @@ export class PoolHeader {
       baseParams: types.TokenParams.fromJSON(obj.baseParams),
       quoteParams: types.TokenParams.fromJSON(obj.quoteParams),
       feeRecipients: types.ProtocolFeeRecipients.fromJSON(obj.feeRecipients),
+      swapSequenceNumber: new BN(obj.swapSequenceNumber),
       padding: obj.padding.map((item) => new BN(item)),
     })
   }

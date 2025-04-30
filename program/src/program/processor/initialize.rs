@@ -187,7 +187,8 @@ pub(crate) fn process_initialize_pool<'a, 'info>(
             vault_key: *quote_vault.key,
         },
         fee_recipients,
-        padding: [0; 13],
+        swap_sequence_number: 0,
+        padding: [0; 12],
     };
 
     let slot = (Clock::get()?.slot / LEADER_SLOT_WINDOW) * LEADER_SLOT_WINDOW;

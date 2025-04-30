@@ -70,7 +70,8 @@ pub struct PoolHeader {
     pub base_params: TokenParams,
     pub quote_params: TokenParams,
     pub fee_recipients: ProtocolFeeRecipients,
-    pub padding: [u64; 13],
+    pub swap_sequence_number: u64,
+    pub padding: [u64; 12],
 }
 
 #[derive(Debug, Copy, Clone, Zeroable, Pod)]
@@ -83,6 +84,11 @@ pub struct PoolAccount {
 impl PoolAccount {
     pub fn increment_sequence_number(&mut self) {
         self.header.sequence_number += 1;
+    }
+
+    pub fn increment_swap_sequence_number(&mut self) -> u64 {
+        self.header.swap_sequence_number += 1;
+        self.header.swap_sequence_number
     }
 
     pub fn update_protocol_fee_recipients_post_swap(&mut self) -> Result<(), ProgramError> {
