@@ -221,7 +221,7 @@ pub struct InitializeLpPositionEvent {
     owner: Pubkey,
 }
 
-#[derive(Debug, Default, Copy, Clone, BorshDeserialize, BorshSerialize)]
+#[derive(Debug, Default, Copy, Clone, PartialEq, BorshDeserialize, BorshSerialize)]
 #[repr(C)]
 pub struct ProtocolFeeRecipientParams {
     pub recipient: Pubkey,
