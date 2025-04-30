@@ -94,7 +94,7 @@ pub struct PendingSharesToVest {
 
 /* Instruction params. Each struct below must be formatted as IX_NAME + "IxParams" */
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Default, PartialEq, BorshDeserialize, BorshSerialize)]
+#[derive(Clone, Copy, Debug, Default, BorshDeserialize, BorshSerialize)]
 pub struct InitializePoolIxParams {
     lp_fee_in_bps: u64,
     protocol_lp_fee_allocation_in_pct: u64,
@@ -223,7 +223,7 @@ pub struct InitializeLpPositionEvent {
     owner: Pubkey,
 }
 
-#[derive(Debug, Default, Copy, Clone, PartialEq, BorshDeserialize, BorshSerialize)]
+#[derive(Debug, Default, Copy, Clone, BorshDeserialize, BorshSerialize)]
 #[repr(C)]
 pub struct ProtocolFeeRecipientParams {
     pub recipient: Pubkey,
