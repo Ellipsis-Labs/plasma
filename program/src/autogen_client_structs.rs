@@ -54,7 +54,8 @@ pub struct PoolHeader {
     pub base_params: TokenParams,
     pub quote_params: TokenParams,
     pub fee_recipients: ProtocolFeeRecipients,
-    pub padding: [u64; 13],
+    pub swap_sequence_number: u64,
+    pub padding: [u64; 12],
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone, BorshDeserialize, BorshSerialize)]
@@ -168,6 +169,7 @@ pub struct PlasmaEventHeader {
 
 #[derive(Debug, Clone, BorshSerialize, BorshDeserialize)]
 pub struct SwapEvent {
+    pub swap_sequence_number: u64,
     pub pre_base_liquidity: u64,
     pub pre_quote_liquidity: u64,
     pub post_base_liquidity: u64,
