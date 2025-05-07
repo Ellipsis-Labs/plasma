@@ -37,7 +37,7 @@ pub(crate) fn process_swap<'a, 'info>(
     pool_context: &PlasmaPoolContext<'a, 'info>,
     accounts: &[AccountInfo<'info>],
     data: &[u8],
-) -> Result<Option<SwapEvent>, ProgramError> {
+) -> Result<SwapEvent, ProgramError> {
     let (base_params, quote_params) = {
         let header = pool_context.pool_info.get_header()?;
         (header.base_params, header.quote_params)
@@ -237,7 +237,7 @@ pub(crate) fn process_swap<'a, 'info>(
         }
     }
 
-    Ok(Some(SwapEvent {
+    Ok(SwapEvent {
         swap_sequence_number: pool.increment_swap_sequence_number(),
         pre_base_liquidity,
         pre_quote_liquidity,
@@ -246,5 +246,5 @@ pub(crate) fn process_swap<'a, 'info>(
         snapshot_base_liquidity: pool.base_reserves_snapshot,
         snapshot_quote_liquidity: pool.quote_reserves_snapshot,
         swap_result,
-    }))
+    })
 }

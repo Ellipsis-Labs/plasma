@@ -65,8 +65,8 @@ pub fn assert_with_msg(v: bool, err: impl Into<ProgramError>, msg: &str) -> Prog
 }
 
 macro_rules! record_event {
-    ($event:ident, $plasma_log_context:ident, $instruction:ident, $pool_context:ident) => {
-        $plasma_log_context.record_event($instruction, &$pool_context, $event)
+    ($plasma_log_context:ident, $pool_context:ident, $event:ident) => {
+        $plasma_log_context.record_event(($pool_context.get_event_header()?, $event).into())
     };
 }
 
@@ -125,57 +125,48 @@ pub fn process_instruction(
     match instruction {
         PlasmaInstruction::InitializePool => {
             msg!("InitializePool");
-            initialize::process_initialize_pool(&pool_context, accounts, data).and_then(
-                |event| record_event!(event, plasma_log_context, instruction, pool_context),
-            )?
+            initialize::process_initialize_pool(&pool_context, accounts, data)
+                .and_then(|event| record_event!(plasma_log_context, pool_context, event))?
         }
         PlasmaInstruction::InitializeLpPosition => {
             msg!("InitializeLpPosition");
-            liquidity::process_initialize_lp_position(&pool_context, accounts).and_then(
-                |event| record_event!(event, plasma_log_context, instruction, pool_context),
-            )?
+            liquidity::process_initialize_lp_position(&pool_context, accounts)
+                .and_then(|event| record_event!(plasma_log_context, pool_context, event))?
         }
         PlasmaInstruction::Swap => {
             msg!("Swap");
-            swap::process_swap(&pool_context, accounts, data).and_then(|event| {
-                record_event!(event, plasma_log_context, instruction, pool_context)
-            })?
+            swap::process_swap(&pool_context, accounts, data)
+                .and_then(|event| record_event!(plasma_log_context, pool_context, event))?
         }
         PlasmaInstruction::AddLiquidity => {
             msg!("AddLiquidity");
-            liquidity::process_add_liquidity(&pool_context, accounts, data).and_then(|event| {
-                record_event!(event, plasma_log_context, instruction, pool_context)
-            })?
+            liquidity::process_add_liquidity(&pool_context, accounts, data)
+                .and_then(|event| record_event!(plasma_log_context, pool_context, event))?
         }
         PlasmaInstruction::RemoveLiquidity => {
             msg!("RemoveLiquidity");
-            liquidity::process_remove_liqidity(&pool_context, accounts, data).and_then(|event| {
-                record_event!(event, plasma_log_context, instruction, pool_context)
-            })?
+            liquidity::process_remove_liqidity(&pool_context, accounts, data)
+                .and_then(|event| record_event!(plasma_log_context, pool_context, event))?
         }
         PlasmaInstruction::RenounceLiquidity => {
             msg!("RenounceLiquidity");
-            liquidity::process_renounce_liqidity(&pool_context, accounts, data).and_then(
-                |event| record_event!(event, plasma_log_context, instruction, pool_context),
-            )?
+            liquidity::process_renounce_liqidity(&pool_context, accounts, data)
+                .and_then(|event| record_event!(plasma_log_context, pool_context, event))?
         }
         PlasmaInstruction::WithdrawLpFees => {
             msg!("WithdrawLpFees");
-            fees::process_withdraw_lp_fees(&pool_context, accounts).and_then(|event| {
-                record_event!(event, plasma_log_context, instruction, pool_context)
-            })?
+            fees::process_withdraw_lp_fees(&pool_context, accounts)
+                .and_then(|event| record_event!(plasma_log_context, pool_context, event))?
         }
         PlasmaInstruction::WithdrawProtocolFees => {
             msg!("WithdrawProtocolFees");
-            fees::process_withdraw_protocol_fees(&pool_context, accounts).and_then(|event| {
-                record_event!(event, plasma_log_context, instruction, pool_context)
-            })?
+            fees::process_withdraw_protocol_fees(&pool_context, accounts)
+                .and_then(|event| record_event!(plasma_log_context, pool_context, event))?
         }
         PlasmaInstruction::TransferLiquidity => {
             msg!("TransferLiquidity");
-            liquidity::process_transfer_liquidity(&pool_context, accounts).and_then(|event| {
-                record_event!(event, plasma_log_context, instruction, pool_context)
-            })?
+            liquidity::process_transfer_liquidity(&pool_context, accounts)
+                .and_then(|event| record_event!(plasma_log_context, pool_context, event))?
         }
         PlasmaInstruction::Log => {
             // The log instruction is handled at the beginning of this function

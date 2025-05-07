@@ -12,13 +12,13 @@ use super::checkers::plasma_checkers::LpPositionAccountInfo;
 use super::checkers::{plasma_checkers::PoolAccountInfo, MintAccountInfo, TokenAccountInfo, PDA};
 use crate::assert_with_msg;
 use crate::program::accounts::{PoolAccount, TokenParams};
-use crate::program::events::PlasmaEvent;
+use crate::program::events::{PlasmaEvent, PlasmaEventHeader};
 use crate::program::instruction::PlasmaInstruction;
 use crate::{
     plasma_log_authority,
     program::validation::checkers::{EmptyAccount, Program, Signer},
 };
-use borsh::{BorshDeserialize, BorshSerialize};
+use borsh::BorshSerialize;
 use bytemuck::try_from_bytes_mut;
 use core::slice::Iter;
 use solana_program::clock::Clock;
@@ -64,37 +64,7 @@ impl<'a, 'info> PlasmaLogContext<'a, 'info> {
 }
 
 impl<'a, 'info> PlasmaLogContext<'a, 'info> {
-    pub(crate) fn record_event<T: BorshSerialize + BorshDeserialize + Clone>(
-        &self,
-        instruction: PlasmaInstruction,
-        pool_context: &PlasmaPoolContext<'a, 'info>,
-        event: T,
-    ) -> Result<(), ProgramError> {
-        let clock = Clock::get()?;
-        let (sequence_number, base_decimals, quote_decimals) = {
-            let mut pool_bytes = pool_context.pool_info.try_borrow_mut_data()?;
-            let pool = try_from_bytes_mut::<PoolAccount>(&mut pool_bytes)
-                .map_err(|_| ProgramError::InvalidAccountData)?;
-            let sequence_number = pool.header.sequence_number;
-            pool.increment_sequence_number();
-            (
-                sequence_number,
-                pool.header.base_params.decimals as u8,
-                pool.header.quote_params.decimals as u8,
-            )
-        };
-        let plasma_event = PlasmaEvent {
-            instruction: instruction as u8,
-            sequence_number,
-            slot: clock.slot,
-            timestamp: clock.unix_timestamp,
-            signer: *pool_context.signer.key,
-            pool: *pool_context.pool_info.key,
-            base_decimals,
-            quote_decimals,
-            event,
-        };
-
+    pub(crate) fn record_event(&self, plasma_event: PlasmaEvent) -> Result<(), ProgramError> {
         let event_vec = plasma_event.try_to_vec()?;
         sol_log_data(&[&event_vec]);
 
@@ -140,6 +110,32 @@ impl<'a, 'info> PlasmaPoolContext<'a, 'info> {
             pool_info: PoolAccountInfo::new_init(next_account_info(account_iter)?)?,
             signer: Signer::new(next_account_info(account_iter)?)?,
         })
+    }
+
+    pub(crate) fn get_event_header(&self) -> Result<PlasmaEventHeader, ProgramError> {
+        let clock = Clock::get()?;
+        let (sequence_number, base_decimals, quote_decimals) = {
+            let mut pool_bytes = self.pool_info.try_borrow_mut_data()?;
+            let pool = try_from_bytes_mut::<PoolAccount>(&mut pool_bytes)
+                .map_err(|_| ProgramError::InvalidAccountData)?;
+            let sequence_number = pool.header.sequence_number;
+            pool.increment_sequence_number();
+            (
+                sequence_number,
+                pool.header.base_params.decimals as u8,
+                pool.header.quote_params.decimals as u8,
+            )
+        };
+        let plasma_event = PlasmaEventHeader {
+            sequence_number,
+            slot: clock.slot,
+            timestamp: clock.unix_timestamp,
+            signer: *self.signer.key,
+            pool: *self.pool_info.key,
+            base_decimals,
+            quote_decimals,
+        };
+        Ok(plasma_event)
     }
 }
 
