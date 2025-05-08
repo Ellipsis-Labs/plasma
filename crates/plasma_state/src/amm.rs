@@ -907,7 +907,7 @@ impl Amm {
             base_swapped_through_bid,
             quote_swapped_through_pool,
             base_swapped_through_pool,
-        ) = if size_on_bid_in_quote >= quote_out {
+        ) = if size_on_bid_in_quote >= quote_out_pre_fee {
             let quote_swapped_through_bid = quote_out_pre_fee;
             let base_swapped_through_bid = self.get_complementary_limit_order_size(
                 quote_swapped_through_bid,

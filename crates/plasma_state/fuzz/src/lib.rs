@@ -77,7 +77,10 @@ pub fn perform_amm_action(amm: &mut Amm, action: AmmAction) {
             }
             match amm.burn(amm.get_slot(), lp_shares) {
                 Ok(_) => {}
-                Err(PlasmaStateError::BelowMinimumWithdrawaRequired) => {
+                Err(PlasmaStateError::BelowMinimumWithdrawaRequired {
+                    quote_amount_to_withdraw: _,
+                    base_amount_to_withdraw: _,
+                }) => {
                     {};
                 }
                 Err(_) => {
@@ -375,7 +378,10 @@ pub fn perform_lp_action(amm: &mut Amm, lps: &mut [Option<LpPosition>], action: 
                     (pct * lp_position.lp_shares as f64) as u64,
                 ) {
                     Ok(_) => {}
-                    Err(PlasmaStateError::BelowMinimumWithdrawaRequired) => {}
+                    Err(PlasmaStateError::BelowMinimumWithdrawaRequired {
+                        quote_amount_to_withdraw: _,
+                        base_amount_to_withdraw: _,
+                    }) => {}
                     Err(e) => {
                         panic!("unexpected error: {}", e);
                     }
