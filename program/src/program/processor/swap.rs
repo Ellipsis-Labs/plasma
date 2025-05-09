@@ -1,6 +1,6 @@
 use borsh::{BorshDeserialize as Deserialize, BorshSerialize as Serialize};
 use bytemuck::try_from_bytes_mut;
-use plasma_state::amm::Side;
+use plasma_amm_state::amm::Side;
 use solana_program::{
     account_info::AccountInfo, clock::Clock, msg, program::set_return_data,
     program_error::ProgramError, sysvar::Sysvar,
