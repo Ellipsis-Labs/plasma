@@ -1,0 +1,31 @@
+[package]
+name = "plasma-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.3.0"
+arbitrary = { version = "0.4.6", features = ["derive"] }
+rand = "0.7"
+tracing = { version = "0.1.37", features = ["log"] }
+
+[dependencies.plasma_state]
+path = ".."
+
+[[bin]]
+name = "fuzz-lp-amm"
+path = "fuzz_targets/fuzz-lp-amm.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz-amm"
+path = "fuzz_targets/fuzz-amm.rs"
+test = false
+doc = false
+bench = false

@@ -1,0 +1,19 @@
+[package]
+edition = "2021"
+name = "plasma-amm-sdk"
+version = "0.1.0"
+
+[features]
+default = []
+
+[dependencies]
+borsh = { version = "0.10.0" }
+bs58 = { workspace = true }
+bytemuck = { workspace = true }
+fixed = "1.27.0"
+num_enum = { workspace = true }
+shank = { workspace = true }
+solana-program = { workspace = true }
+
+[dev-dependencies]
+rand = "0.7.0"
