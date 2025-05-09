@@ -11,7 +11,8 @@ bs58 = "0.5.0"
 bytemuck = { version = "1.14.3", features = ["derive"] }
 ellipsis-macros = "0.1.0"
 num_enum = "0.7.2"
-plasma_state = { version = "0.1.0", path = "crates/plasma_state" }
+plasma-amm-sdk = { version = "0.1.0", path = "sdk/rust" }
+plasma-amm-state = { version = "0.1.0", path = "crates/plasma_state" }
 shank = "0.3.0"
 solana-program = "^1.16"
 spl-associated-token-account = { version = "^2.2", features = [

@@ -5,8 +5,8 @@ use solana_program::pubkey::Pubkey;
 pub const POOL_LEN: u64 = 624;
 pub const POOL_DISCRIMINATOR: [u8; 8] = [116, 210, 187, 119, 196, 196, 52, 137];
 
-#[derive(Debug, Copy, Clone, BorshDeserialize, BorshSerialize)]
 #[repr(C)]
+#[derive(Debug, Copy, Clone, BorshDeserialize, BorshSerialize)]
 pub struct LpPosition {
     reward_factor_snapshot: i128,
     pub lp_shares: u64,
@@ -16,8 +16,8 @@ pub struct LpPosition {
     pub pending_shares_to_vest: (u64, u64),
 }
 
-#[derive(Debug, Copy, Clone, Zeroable, Pod, BorshDeserialize, BorshSerialize)]
 #[repr(C)]
+#[derive(Debug, Copy, Clone, Zeroable, Pod, BorshDeserialize, BorshSerialize)]
 pub struct PoolHeader {
     pub discriminator: [u8; 8],
     pub sequence_number: u64,
@@ -28,8 +28,8 @@ pub struct PoolHeader {
     pub padding: [u64; 12],
 }
 
-#[derive(Debug, Copy, Clone, Zeroable, Pod, BorshDeserialize, BorshSerialize)]
 #[repr(C)]
+#[derive(Debug, Copy, Clone, Zeroable, Pod, BorshDeserialize, BorshSerialize)]
 pub struct TokenParams {
     /// Number of decimals for the token (e.g. 9 for SOL, 6 for USDC).
     pub decimals: u32,
@@ -44,8 +44,8 @@ pub struct TokenParams {
     pub vault_key: Pubkey,
 }
 
-#[derive(Debug, Default, Copy, Clone, Zeroable, Pod, BorshDeserialize, BorshSerialize)]
 #[repr(C)]
+#[derive(Debug, Default, Copy, Clone, Zeroable, Pod, BorshDeserialize, BorshSerialize)]
 pub struct ProtocolFeeRecipient {
     pub recipient: Pubkey,
     pub shares: u64,
@@ -53,8 +53,8 @@ pub struct ProtocolFeeRecipient {
     pub collected_quote_fees: u64,
 }
 
-#[derive(Debug, Default, Copy, Clone, Zeroable, Pod, BorshDeserialize, BorshSerialize)]
 #[repr(C)]
+#[derive(Debug, Default, Copy, Clone, Zeroable, Pod, BorshDeserialize, BorshSerialize)]
 pub struct ProtocolFeeRecipients {
     pub recipients: [ProtocolFeeRecipient; 3],
     _padding: [u64; 12],

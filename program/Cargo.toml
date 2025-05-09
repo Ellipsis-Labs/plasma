@@ -1,7 +1,7 @@
 [package]
+edition = "2021"
 name = "plasma"
 version = "0.1.0"
-edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
@@ -9,19 +9,19 @@ name = "plasma"
 
 [features]
 autogen-client-structs = []
-no-entrypoint = []
 default = []
+no-entrypoint = []
 
 [dependencies]
+borsh = { workspace = true }
 bs58 = { workspace = true }
 bytemuck = { workspace = true }
-borsh = { workspace = true }
 ellipsis-macros = { workspace = true }
 num_enum = { workspace = true }
-plasma_state = { workspace = true, features = ["borsh"] }
+plasma-amm-state = { workspace = true, features = ["borsh"] }
 shank = { workspace = true }
 solana-program = { workspace = true }
-spl-token = { workspace = true }
 spl-associated-token-account = { workspace = true }
+spl-token = { workspace = true }
 static_assertions = { workspace = true }
 thiserror = { workspace = true }

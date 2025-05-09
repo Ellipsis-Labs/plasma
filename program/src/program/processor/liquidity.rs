@@ -2,7 +2,7 @@ use std::mem::size_of;
 
 use borsh::{BorshDeserialize as Deserialize, BorshSerialize as Serialize};
 use bytemuck::{try_from_bytes, try_from_bytes_mut};
-use plasma_state::lp::{AddLiquidityResult, LpPosition, RemoveLiquidityResult};
+use plasma_amm_state::lp::{AddLiquidityResult, LpPosition, RemoveLiquidityResult};
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     clock::Clock,

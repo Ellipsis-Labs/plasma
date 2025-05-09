@@ -1,7 +1,7 @@
 use borsh::{BorshDeserialize as Deserialize, BorshSerialize as Serialize};
 use solana_program::pubkey::Pubkey;
 
-use plasma_state::amm::SwapResult;
+use plasma_amm_state::amm::SwapResult;
 
 use crate::initialize::ProtocolFeeRecipientParams;
 

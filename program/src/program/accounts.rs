@@ -7,7 +7,7 @@ use std::{
 use bytemuck::{Pod, Zeroable};
 use solana_program::{msg, program_error::ProgramError, pubkey::Pubkey};
 
-use plasma_state::{amm::Amm, lp::LpPosition};
+use plasma_amm_state::{amm::Amm, lp::LpPosition};
 
 use crate::assert_with_msg;
 
