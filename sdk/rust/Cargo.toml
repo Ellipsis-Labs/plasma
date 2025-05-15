@@ -2,6 +2,10 @@
 edition = "2021"
 name = "plasma-amm-sdk"
 version = "0.1.0"
+description = "Plasma AMM SDK"
+authors = ["Ellipsis Labs <maintainers@ellipsis.xyz>"]
+license = "MIT"
+repository = "https://github.com/Ellipsis-Labs/plasma"
 
 [features]
 default = []

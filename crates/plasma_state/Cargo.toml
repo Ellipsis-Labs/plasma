@@ -2,6 +2,10 @@
 edition = "2021"
 name = "plasma-amm-state"
 version = "0.1.0"
+description = "Plasma AMM state"
+authors = ["Ellipsis Labs <maintainers@ellipsis.xyz>"]
+license = "MIT"
+repository = "https://github.com/Ellipsis-Labs/plasma"
 
 [features]
 borsh = ["dep:borsh"]
