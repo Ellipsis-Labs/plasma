@@ -34,14 +34,14 @@ async function main() {
     shank.on("close", resolve);
   });
 
-  const removeClientFolder = spawn("rm", ["-rf", "../plasma-sdk/generated"]);
+  const removeClientFolder = spawn("rm", ["-rf", "../sdk/typescript/generated"]);
   await new Promise((resolve) => {
     removeClientFolder.on("close", resolve);
   });
 
   const generateClient = spawn("anchor-client-gen", [
     "plasma.json",
-    "../plasma-sdk/generated",
+    "../sdk/typescript/generated",
   ]).on("error", (err) => {
     console.error(err);
     if (err.code === "ENOENT") {
@@ -58,12 +58,12 @@ async function main() {
     generateClient.on("close", resolve);
   });
 
-  const removeErrorFolder = spawn("rm", ["-rf", "../plasma-sdk/generated/errors"]);
+  const removeErrorFolder = spawn("rm", ["-rf", "../sdk/typescript/generated/errors"]);
   await new Promise((resolve) => {
     removeErrorFolder.on("close", resolve);
   });
 
-  recursivelyMutateClientFiles("../plasma-sdk/generated");
+  recursivelyMutateClientFiles("../sdk/typescript/generated");
 
   console.log("Done");
 }
