@@ -1,11 +1,8 @@
-use borsh::{BorshDeserialize as Deserialize, BorshSerialize as Serialize};
+use crate::{amm::SwapResult, instructions::ProtocolFeeRecipientParams};
+use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::pubkey::Pubkey;
 
-use plasma_amm_state::amm::SwapResult;
-
-use crate::initialize::ProtocolFeeRecipientParams;
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub struct PlasmaEventHeader {
     pub sequence_number: u64,
     pub slot: u64,
@@ -16,7 +13,7 @@ pub struct PlasmaEventHeader {
     pub quote_decimals: u8,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub enum PlasmaEvent {
     Swap {
         header: PlasmaEventHeader,
@@ -61,7 +58,7 @@ pub enum PlasmaEvent {
     },
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub struct SwapEvent {
     pub swap_sequence_number: u64,
     pub pre_base_liquidity: u64,
@@ -81,7 +78,7 @@ impl From<(PlasmaEventHeader, SwapEvent)> for PlasmaEvent {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub struct AddLiquidityEvent {
     pub pool_total_lp_shares: u64,
     pub pool_total_base_liquidity: u64,
@@ -106,7 +103,7 @@ impl From<(PlasmaEventHeader, AddLiquidityEvent)> for PlasmaEvent {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub struct RemoveLiquidityEvent {
     pub pool_total_lp_shares: u64,
     pub pool_total_base_liquidity: u64,
@@ -131,7 +128,7 @@ impl From<(PlasmaEventHeader, RemoveLiquidityEvent)> for PlasmaEvent {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub struct RenounceLiquidityEvent {
     pub allow_fee_withdrawal: bool,
 }
@@ -144,7 +141,7 @@ impl From<(PlasmaEventHeader, RenounceLiquidityEvent)> for PlasmaEvent {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub struct InitializeLpPositionEvent {
     pub owner: Pubkey,
 }
@@ -157,7 +154,7 @@ impl From<(PlasmaEventHeader, InitializeLpPositionEvent)> for PlasmaEvent {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub struct WithdrawLpFeesEvent {
     pub fees_withdrawn: u64,
 }
@@ -170,7 +167,7 @@ impl From<(PlasmaEventHeader, WithdrawLpFeesEvent)> for PlasmaEvent {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub struct InitializePoolEvent {
     pub lp_fee_in_bps: u64,
     pub protocol_fee_in_pct: u64,
@@ -185,7 +182,7 @@ impl From<(PlasmaEventHeader, InitializePoolEvent)> for PlasmaEvent {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub struct WithdrawProtocolFeesEvent {
     pub protocol_fee_recipient: Pubkey,
     pub fees_withdrawn: u64,
@@ -199,7 +196,7 @@ impl From<(PlasmaEventHeader, WithdrawProtocolFeesEvent)> for PlasmaEvent {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, BorshDeserialize, BorshSerialize)]
 pub struct TransferLiquidityEvent {
     pub src: Pubkey,
     pub dst: Pubkey,
