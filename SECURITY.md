@@ -32,7 +32,7 @@ The bug bounty program is administered by Ellipsis Labs. All bug bounty decision
       <td>High</td>
       <td>
         <ul>
-          <li>Slow-drip drainage of funds that’s profitable to the attacker</li>
+          <li>Exploits that bypass the frontrun prevention mechanism within the same leader window</li>
           <li>Temporary freezing of user funds</li>
         </ul>
       </td>
