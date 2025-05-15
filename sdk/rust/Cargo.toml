@@ -16,7 +16,7 @@ bs58 = { workspace = true }
 bytemuck = { workspace = true }
 fixed = "1.27.0"
 num_enum = { workspace = true }
-plasma-amm-state = { workspace = true }
+plasma-amm-state = { workspace = true, features = ["borsh"] }
 shank = { workspace = true }
 solana-program = { workspace = true }
 
