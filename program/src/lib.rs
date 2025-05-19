@@ -71,6 +71,22 @@ macro_rules! record_event {
 }
 
 #[cfg(not(feature = "no-entrypoint"))]
+use solana_security_txt::security_txt;
+
+#[cfg(not(feature = "no-entrypoint"))]
+security_txt! {
+    // Required fields
+    name: "Plasma",
+    project_url: "https://ellipsislabs.xyz/",
+    contacts: "email:maintainers@ellipsislabs.xyz",
+    policy: "https://github.com/Ellipsis-Labs/plasma/blob/master/SECURITY.md",
+    // Optional Fields
+    preferred_languages: "en",
+    source_code: "https://github.com/Ellipsis-Labs/plasma",
+    auditors: "contact@osec.io"
+}
+
+#[cfg(not(feature = "no-entrypoint"))]
 solana_program::entrypoint!(process_instruction);
 
 pub fn process_instruction(

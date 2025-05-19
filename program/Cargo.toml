@@ -25,3 +25,4 @@ spl-associated-token-account = { workspace = true }
 spl-token = { workspace = true }
 static_assertions = { workspace = true }
 thiserror = { workspace = true }
+solana-security-txt = { workspace = true }
