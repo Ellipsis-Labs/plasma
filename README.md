@@ -1,6 +1,6 @@
 # Plasma
 
-Plasma is a reference implementation of a sandwich-resistant AMM for the Solana blockchain.
+Plasma is a reference implementation of a sandwich-resistant AMM for the Solana blockchain. It is deployed on Solana's mainnet-beta at `srAMMzfVHVAtgSJc8iH6CfKzuWuUTzLHVCE81QU1rgi` with a verified build.
 
 The underlying mechanism was originally described in a [post from Umbra Research](https://www.umbraresearch.xyz/writings/sandwich-resistant-amm).
 
