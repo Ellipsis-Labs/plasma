@@ -10,7 +10,7 @@ The primary license for Plasma is the Business Source License 1.1 (BUSL-1.1), wh
 
 ## Audits
 
-Plasma has been audited by both [OtterSec](audits/OtterSec.pdf) and [MadShield](audits/MadShield.pdf)
+Plasma has been audited by [OtterSec](audits/OtterSec.pdf), [MadShield](audits/MadShield.pdf), and [Accretion](audits/Accretion.pdf).
 
 ## Getting Started
 
