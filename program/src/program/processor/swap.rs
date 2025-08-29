@@ -144,7 +144,7 @@ pub(crate) fn process_swap<'a, 'info>(
                         msg!("Swap failed: {:?}", e);
                         ProgramError::InvalidAccountData
                     })?;
-                    if result.base_amount_to_transfer < min_amount_out {
+                    if result.quote_amount_to_transfer < min_amount_out {
                         msg!("Sell failed: slippage exceeded");
                         return Err(ProgramError::InvalidArgument);
                     }
