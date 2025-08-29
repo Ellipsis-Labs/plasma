@@ -29,7 +29,7 @@ import {
 } from "../generated/instructions";
 import { LpPositionAccount, PoolAccount } from "../generated/accounts";
 import BN from "bn.js";
-import { ProtocolFeeRecipientParams, Side } from "../generated/types";
+import { ProtocolFeeRecipientParams, Side, SwapType } from "../generated/types";
 import assert from "assert";
 import { ExactIn } from "../generated/types/SwapType";
 import { FixedPoint } from "../util/FixedPoint";
@@ -121,9 +121,12 @@ const initPool = async (
   mintPubkey: PublicKey,
   mintAtaPayer: PublicKey,
   wSolAtaPayer: PublicKey,
-  initialLpShares: BN,
-  feeRecipients: ProtocolFeeRecipientParams[]
+  feeRecipients: ProtocolFeeRecipientParams[],
+  solAmountIn: BN = new BN(GRADUATION_SOL_AMOUNT),
+  baseAmountIn: BN = new BN(GRADUATION_AMOUNT)
 ) => {
+  const initialLpShares = sqrt(new BN(baseAmountIn).mul(new BN(solAmountIn)));
+
   const initTx = new Transaction()
     .add(
       SystemProgram.createAccount({
@@ -196,8 +199,8 @@ const initPool = async (
       AddLiquidity(
         {
           params: {
-            desiredBaseAmountIn: new BN(GRADUATION_AMOUNT),
-            desiredQuoteAmountIn: new BN(GRADUATION_SOL_AMOUNT),
+            desiredBaseAmountIn: new BN(baseAmountIn),
+            desiredQuoteAmountIn: new BN(solAmountIn),
             initialLpShares,
           },
         },
@@ -268,7 +271,11 @@ const initPool = async (
 
 const setupMint = async (
   c: Connection,
-  payer: Keypair
+  payer: Keypair,
+  mintDecimals: number = 6,
+  createWsolAta: boolean = true,
+  solAmountIn: BN = new BN(GRADUATION_SOL_AMOUNT),
+  baseAmountIn: BN = new BN(GRADUATION_AMOUNT)
 ): Promise<[PublicKey, PublicKey, PublicKey]> => {
   const mintKeypair = Keypair.generate();
   const mintAtaPayer = await getAssociatedTokenAddress(
@@ -279,6 +286,21 @@ const setupMint = async (
     NATIVE_MINT,
     payer.publicKey
   );
+  if (createWsolAta) {
+    const initWsolTx = new Transaction().add(
+      createAssociatedTokenAccountInstruction(
+        payer.publicKey,
+        wSolAtaPayer,
+        payer.publicKey,
+        NATIVE_MINT
+      )
+    );
+
+    await sendAndConfirmTransaction(c, initWsolTx, [payer], {
+      commitment: "confirmed",
+    });
+  }
+
   const initMintTx = new Transaction()
     .add(
       SystemProgram.createAccount({
@@ -292,7 +314,7 @@ const setupMint = async (
     .add(
       createInitializeMintInstruction(
         mintKeypair.publicKey,
-        6,
+        mintDecimals,
         payer.publicKey,
         null
       )
@@ -306,32 +328,25 @@ const setupMint = async (
       )
     )
     .add(
-      createAssociatedTokenAccountInstruction(
+      createMintToInstruction(
+        mintKeypair.publicKey,
+        mintAtaPayer,
         payer.publicKey,
-        wSolAtaPayer,
-        payer.publicKey,
-        NATIVE_MINT
+        baseAmountIn.toNumber() * 2
       )
     )
     .add(
       SystemProgram.transfer({
         fromPubkey: payer.publicKey,
         toPubkey: wSolAtaPayer,
-        lamports: GRADUATION_SOL_AMOUNT * 2,
+        lamports: solAmountIn.toNumber() * 2,
       })
     )
-    .add(createSyncNativeInstruction(wSolAtaPayer))
-    .add(
-      createMintToInstruction(
-        mintKeypair.publicKey,
-        mintAtaPayer,
-        payer.publicKey,
-        GRADUATION_AMOUNT * 2
-      )
-    );
+    .add(createSyncNativeInstruction(wSolAtaPayer));
   await sendAndConfirmTransaction(c, initMintTx, [payer, mintKeypair], {
     commitment: "confirmed",
   });
+
   return [mintKeypair.publicKey, mintAtaPayer, wSolAtaPayer];
 };
 
@@ -361,9 +376,6 @@ describe("Plasma AMM", async () => {
 
   describe("Pool Initialization", () => {
     it("should fail to initialize the pool if protocol fee recipients are the same", async () => {
-      const initialLpShares = sqrt(
-        new BN(GRADUATION_AMOUNT).mul(new BN(GRADUATION_SOL_AMOUNT))
-      );
       const feeRecipients = [
         new ProtocolFeeRecipientParams({
           recipient: traders[0][0].publicKey,
@@ -388,7 +400,6 @@ describe("Plasma AMM", async () => {
           mintPubkey,
           mintAtaPayer,
           wSolAtaPayer,
-          initialLpShares,
           feeRecipients
         );
 
@@ -424,7 +435,6 @@ describe("Plasma AMM", async () => {
         mintPubkey,
         mintAtaPayer,
         wSolAtaPayer,
-        initialLpShares,
         feeRecipients
       );
 
@@ -439,7 +449,6 @@ describe("Plasma AMM", async () => {
         mintPubkey,
         mintAtaPayer,
         wSolAtaPayer,
-        initialLpShares,
         feeRecipients
       );
 
@@ -2237,6 +2246,140 @@ describe("Plasma AMM", async () => {
         remainingLpShares.sub(expectedLpShares).abs().lte(tolerance),
         "Remaining LP shares should be approximately half of initial"
       );
+    });
+  });
+  describe("sellExactIn", () => {
+    it("sellExactIn min amount out should be respected", async () => {
+      console.log("setting up new mint with 9 decimals");
+      const [mintPubkey, mintAtaPayer, wSolAtaPayer] = await setupMint(
+        c,
+        payer,
+        9,
+        false
+      );
+
+      const poolKeypair = Keypair.generate();
+      const poolKey = poolKeypair.publicKey;
+      const feeRecipients = [
+        new ProtocolFeeRecipientParams({
+          recipient: payer.publicKey,
+          shares: new BN(100),
+        }),
+        new ProtocolFeeRecipientParams({
+          recipient: Keypair.generate().publicKey,
+          shares: new BN(100),
+        }),
+        new ProtocolFeeRecipientParams({
+          recipient: Keypair.generate().publicKey,
+          shares: new BN(100),
+        }),
+      ];
+
+      console.log("setting up pool");
+      // Set up pool with 200 SOL in and 100 base tokens in
+      await initPool(
+        c,
+        poolKeypair,
+        payer,
+        mintPubkey,
+        mintAtaPayer,
+        wSolAtaPayer,
+        feeRecipients,
+        new BN(200_000_000_000),
+        new BN(100_000_000_000)
+      );
+
+      console.log("setting up new trader");
+
+      const [swapper, swapperMintAta, swapperWsolAta] = await bootstrapTrader(
+        c,
+        mintPubkey
+      );
+
+      const buyTx = new Transaction().add(
+        Swap(
+          {
+            params: {
+              side: new Side.Buy(),
+              swapType: new SwapType.ExactIn({
+                amountIn: new BN(1_000_000),
+                minAmountOut: new BN(0),
+              }),
+            },
+          },
+          {
+            plasmaProgram: PROGRAM_ID,
+            logAuthority: LOG_AUTHORITY,
+            pool: poolKey,
+            trader: swapper.publicKey,
+            baseAccount: swapperMintAta,
+            quoteAccount: swapperWsolAta,
+            baseVault: PublicKey.findProgramAddressSync(
+              [Buffer.from("vault"), poolKey.toBuffer(), mintPubkey.toBuffer()],
+              PROGRAM_ID
+            )[0],
+            quoteVault: PublicKey.findProgramAddressSync(
+              [
+                Buffer.from("vault"),
+                poolKey.toBuffer(),
+                NATIVE_MINT.toBuffer(),
+              ],
+              PROGRAM_ID
+            )[0],
+            tokenProgram: TOKEN_PROGRAM_ID,
+          }
+        )
+      );
+      const swapperBaseBalanceBefore = await c.getTokenAccountBalance(swapperMintAta);
+      console.log("Swapper base token balance before buy:", swapperBaseBalanceBefore.value.uiAmountString);
+
+      await sendAndConfirmTransaction(c, buyTx, [swapper], {
+        commitment: "confirmed",
+      });
+
+      // Get the base token balance of the swapper after the buy
+      const swapperBaseBalance = await c.getTokenAccountBalance(swapperMintAta);
+      console.log("Swapper base token balance after buy:", swapperBaseBalance.value.uiAmountString);
+
+
+      const sellTx = new Transaction().add(
+        Swap(
+          {
+            params: {
+              side: new Side.Sell(),
+              swapType: new SwapType.ExactIn({
+                amountIn: new BN(498747),
+                minAmountOut: new BN(498748),
+              }),
+            },
+          },
+          {
+            plasmaProgram: PROGRAM_ID,
+            logAuthority: LOG_AUTHORITY,
+            pool: poolKey,
+            trader: swapper.publicKey,
+            baseAccount: swapperMintAta,
+            quoteAccount: swapperWsolAta,
+            baseVault: PublicKey.findProgramAddressSync(
+              [Buffer.from("vault"), poolKey.toBuffer(), mintPubkey.toBuffer()],
+              PROGRAM_ID
+            )[0],
+            quoteVault: PublicKey.findProgramAddressSync(
+              [
+                Buffer.from("vault"),
+                poolKey.toBuffer(),
+                NATIVE_MINT.toBuffer(),
+              ],
+              PROGRAM_ID
+            )[0],
+            tokenProgram: TOKEN_PROGRAM_ID,
+          }
+        )
+      );
+
+      await sendAndConfirmTransaction(c, sellTx, [swapper], {
+        commitment: "confirmed",
+      });
     });
   });
 });
