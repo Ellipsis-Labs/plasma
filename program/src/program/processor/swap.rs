@@ -103,9 +103,7 @@ pub(crate) fn process_swap<'a, 'info>(
                         msg!("Buy failed: slippage exceeded");
                         return Err(ProgramError::InvalidArgument);
                     }
-                    if result.quote_amount_to_transfer + result.fee_in_quote
-                        > quote_account.amount()?
-                    {
+                    if result.quote_amount_to_transfer > quote_account.amount()? {
                         msg!("Insufficient quote balance, failing");
                         return Err(ProgramError::InvalidArgument);
                     }
