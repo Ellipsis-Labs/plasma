@@ -122,7 +122,7 @@ fn test_instruction_serialization() {
             Ok(j) => j,
             Err(_) => {
                 // This needs to be changed if new instructions are added
-                assert!(i > 7);
+                assert!(i > 9);
                 continue;
             }
         };
